@@ -1,10 +1,12 @@
 import styles from "../styles/Home.module.css";
-import Aww from "./Aww";
+import Aww from "../components/Aww";
 
 export default function Home() {
   return (
     <div className={styles.container}>
-      <h2>Testing</h2>
+      <div className={styles.header}>
+        <h1>Testing</h1>
+      </div>
       <Aww />
     </div>
   );

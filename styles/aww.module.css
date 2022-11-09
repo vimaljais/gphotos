@@ -1,0 +1,8 @@
+.singleImage {
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.singleImage:hover {
+  filter: brightness(1.2);
+}
