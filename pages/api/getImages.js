@@ -5,8 +5,12 @@ import updateMongo from "../../util/updateMongoFromGoogle";
 import { getToken } from "./auth/getToken";
 
 export default async function handler(req, res) {
-  // const albumId= process.env.BONKY_ALBUM_ID //BONKY
-  const albumId = process.env.TEST_ALBUM_ID; //test
+  let albumId;
+  if (process.env.isProd) {
+    albumId = process.env.BONKY_ALBUM_ID; //BONKY
+  } else {
+  albumId = process.env.TEST_ALBUM_ID; //test
+  }
 
   const tokens = await getToken();
   var apiResponse = [];
@@ -37,7 +41,7 @@ export default async function handler(req, res) {
 
     res.status(200).send(apiResponse);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(401).json({ message: "Unauthorized", error: err });
   }
 }
