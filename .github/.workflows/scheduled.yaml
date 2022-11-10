@@ -1,0 +1,13 @@
+name: hourly-cron-job
+on:
+  schedule:
+    - cron: "*/60 * * * *"
+  workflow_dispatch:
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hourly-cron-job
+        run: |
+          curl --request POST \
+          --url 'https://bonky.vercel.app/api/updateMongoFromGoogle' \
