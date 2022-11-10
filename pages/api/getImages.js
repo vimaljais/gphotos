@@ -6,7 +6,7 @@ import { getToken } from "./auth/getToken";
 
 export default async function handler(req, res) {
   let albumId;
-  if (process.env.isProd) {
+  if (process.env.IS_PROD === "YES") {
     albumId = process.env.BONKY_ALBUM_ID; //BONKY
   } else {
   albumId = process.env.TEST_ALBUM_ID; //test

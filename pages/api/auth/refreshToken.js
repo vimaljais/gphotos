@@ -8,7 +8,7 @@ export const gererateAccessToken = async (
   const oauth2Client = new OAuth2(
     process.env.GOOGLE_CLIENT_ID, // ClientID
     process.env.GOOGLE_CLIENT_SECRET, // Client Secret
-    "http://localhost:3000/return" // Redirect URL
+    process.env.NEXTAUTH_URL // Redirect URL
   );
 
   oauth2Client.setCredentials({

@@ -13,7 +13,7 @@ export default function Aww() {
   const [photoIndex, setPhotoIndex] = useState(0);
 
   const getAlbumData = async () => {
-    const url = `http://localhost:3000/api/getImages`;
+    const url = `/api/getImages`;
     const res = await fetch(url);
     const data = await res.json();
     setAlbumData(data);
