@@ -4,6 +4,7 @@ import { linkToB64 } from "./linkToB64";
 export default async function uploadToMongo(albumData, albumId) {
   try {
     var db;
+    let toPushData = [];
 
     if (!db) {
       try {
@@ -26,33 +27,32 @@ export default async function uploadToMongo(albumData, albumId) {
           var album = await db
             .collection(albumId)
             .findOne({ id: singleImageData.id });
-
           if (!album) {
             const b64 = await linkToB64(singleImageData.baseUrl);
             albumData[i]["img64"] = b64;
+            toPushData.push(albumData[i]);
           }
         })
       );
     };
 
     const pushToDB = async () => {
-      // try {
-      //   const drop = await db.collection(albumId).deleteMany({});
-      //   console.log("drop response:", drop);
-      // } catch {
-      //   console.log("album doesnt exist");
-      // }
-
-      const insertManyRes = await db.collection(albumId).insertMany(albumData);
+      const insertManyRes = await db.collection(albumId).insertMany(toPushData);
 
       db.on("error", console.error.bind(console, "MongoDB connection error:"));
       return insertManyRes;
     };
     await addBase64();
-    const apiRes = await pushToDB();
+    let apiRes = "";
+    if (toPushData.length > 0) {
+      apiRes = await pushToDB();
+    }
+    else {
+      apiRes ="nothing to push"
+    }
     console.log("Response of pushing to db", apiRes);
-  } catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     console.error("Error occured when pushing google data to mongo");
   }
 }
