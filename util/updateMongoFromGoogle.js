@@ -12,7 +12,7 @@ export default async function updateMongo(albumData, albumId) {
           db = mongoose.connection;
 
           let albumExpiryTime = new Date();
-          albumExpiryTime.setMinutes(albumExpiryTime.getMinutes() + 50);
+          albumExpiryTime.setMinutes(albumExpiryTime.getMinutes() + 20);
 
           try {
             const drop = await db.collection(albumId).deleteMany({});
