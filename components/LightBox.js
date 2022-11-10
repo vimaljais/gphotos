@@ -7,12 +7,12 @@ const LightboxComponent = ({ isOpen, setIsOpen, photoIndex, setPhotoIndex, image
     <div>
       {isOpen && (
         <Lightbox
-          mainSrc={`${images[photoIndex]?.baseUrl}=w1600`}
-          nextSrc={images[(photoIndex + 1) % images.length]?.baseUrl}
-          prevSrc={images[(photoIndex + images.length - 1) % images.length]?.baseUrl}
+          mainSrc={`${images[photoIndex]?.img64}`}
+          nextSrc={images[(photoIndex + 1) % images.length]?.img64}
+          prevSrc={images[(photoIndex + images.length - 1) % images.length]?.img64}
           onCloseRequest={() => setIsOpen(false)}
-          onMovePrevRequest={() => setPhotoIndex((photoIndex) => (photoIndex + images.length - 1) % images.length)?.baseUrl}
-          onMoveNextRequest={() => setPhotoIndex((photoIndex) => (photoIndex + 1) % images.length)?.baseUrl}
+          onMovePrevRequest={() => setPhotoIndex((photoIndex) => (photoIndex + images.length - 1) % images.length)?.img64}
+          onMoveNextRequest={() => setPhotoIndex((photoIndex) => (photoIndex + 1) % images.length)?.img64}
         />
       )}
     </div>

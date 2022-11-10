@@ -19,8 +19,17 @@ export default function Aww() {
     setAlbumData(data);
   };
 
+  // const updating = async () => {
+  //   const url = `/api/updateMongoFromGoogle`;
+  //   const res = await fetch(url);
+  //   const data = await res.json();
+  //   console.log(data)
+  // };
+
+
   useEffect(() => {
     try {
+      // await updating();
       getAlbumData();
     } catch (err) {
       console.log("error fetching album data", err);
@@ -44,8 +53,8 @@ export default function Aww() {
                     setPhotoIndex(i);
                   }}
                   className={styles.singleImage}
-                  src={`${item.baseUrl}`}
-                  srcSet={`${item.baseUrl}`}
+                  src={`${item.img64}`}
+                  srcSet={`${item.img64}`}
                   alt={item.title}
                   loading="lazy"
                 />
