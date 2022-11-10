@@ -5,12 +5,15 @@ import ImageListItem from "@mui/material/ImageListItem";
 
 import styles from "../styles/aww.module.css";
 import Loader from "./Loader";
+import LightboxComponent from "./LightBox";
 
 export default function Aww() {
   const [albumData, setAlbumData] = useState([]);
+  const [isLightBoxOpen, setIsLightBoxOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   const getAlbumData = async () => {
-    const url = `http://localhost:3000/api/getImages`;
+    const url = `/api/getImages`;
     const res = await fetch(url);
     const data = await res.json();
     setAlbumData(data);
@@ -32,24 +35,36 @@ export default function Aww() {
     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
       {albumData?.length > 0 ? (
         <Box sx={{ width: "80%", height: "80%", overflowY: "hidden" }}>
-
-            <ImageList variant="masonry" cols={6} gap={8}>
-              {albumData.map((item) => (
-                <ImageListItem className={styles.imageWrapper} key={item.id}>
-                  <img
-                    className={styles.singleImage}
-                    src={`${item.baseUrl}`}
-                    srcSet={`${item.baseUrl}`}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                </ImageListItem>
-              ))}
-            </ImageList>
+          <ImageList variant="masonry" cols={6} gap={8}>
+            {albumData.map((item, i) => (
+              <ImageListItem className={styles.imageWrapper} key={item.id}>
+                <img
+                  onClick={() => {
+                    setIsLightBoxOpen(true);
+                    setPhotoIndex(i);
+                  }}
+                  className={styles.singleImage}
+                  src={`${item.baseUrl}`}
+                  srcSet={`${item.baseUrl}`}
+                  alt={item.title}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
         </Box>
       ) : (
-        <div><Loader /></div>
+        <div>
+          <Loader />
+        </div>
       )}
+      <LightboxComponent
+        isOpen={isLightBoxOpen}
+        setIsOpen={setIsLightBoxOpen}
+        photoIndex={photoIndex}
+        setPhotoIndex={setPhotoIndex}
+        images={albumData}
+      />
     </div>
   );
 }
