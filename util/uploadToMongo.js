@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { linkToB64 } from "./linkToB64";
+import { uploadToImgbb } from "./uploadToImgbb";
 
 export default async function uploadToMongo(albumData, albumId) {
+  console.log("starting to upload to mongo", albumData.length);
   try {
     var db;
 
@@ -10,7 +11,7 @@ export default async function uploadToMongo(albumData, albumId) {
         const mongoDB = process.env.MONGO_URL;
         mongoose.connect(mongoDB, {
           useNewUrlParser: true,
-          useUnifiedTopology: true,
+          useUnifiedTopology: true
         });
 
         db = mongoose.connection;
@@ -20,39 +21,29 @@ export default async function uploadToMongo(albumData, albumId) {
       }
     }
 
-    const addBase64 = async () => {
+    const uploadAndPushToMongo = async () => {
       await Promise.all(
         albumData.map(async (singleImageData, i) => {
-          var album = await db
-            .collection(albumId)
-            .findOne({ id: singleImageData.id });
-
+          var album = await db.collection(albumId).findOne({ id: singleImageData.id });
           if (!album) {
-            const b64 = await linkToB64(singleImageData.baseUrl);
-            albumData[i]["img64"] = b64;
+            console.log("pushing new");
+            const imgurData = await uploadToImgbb(singleImageData.baseUrl);
+            albumData[i]["imgurData"] = imgurData;
+            try {
+              db.collection(albumId).insertOne(albumData[i]);
+            } catch (err) {
+              console.log("error pushing singledata to db", err);
+            }
+          } else {
+            console.log("already available");
           }
         })
       );
     };
-
-    const pushToDB = async () => {
-      // try {
-      //   const drop = await db.collection(albumId).deleteMany({});
-      //   console.log("drop response:", drop);
-      // } catch {
-      //   console.log("album doesnt exist");
-      // }
-
-      const insertManyRes = await db.collection(albumId).insertMany(albumData);
-
-      db.on("error", console.error.bind(console, "MongoDB connection error:"));
-      return insertManyRes;
-    };
-    await addBase64();
-    const apiRes = await pushToDB();
-    console.log("Response of pushing to db", apiRes);
-  } catch(err) {
-    console.log(err)
+    await uploadAndPushToMongo();
+    console.log("Response of pushing to db", "uploaded");
+  } catch (err) {
+    console.log(err);
     console.error("Error occured when pushing google data to mongo");
   }
 }

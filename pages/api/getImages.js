@@ -1,6 +1,7 @@
 import getImagesFromMongo from "../../util/getImagesFromMongo";
 
 export default async function handler(req, res) {
+
   let albumId;
   if (process.env.IS_PROD === "YES") {
     albumId = process.env.BONKY_ALBUM_ID; //BONKY
@@ -11,9 +12,8 @@ export default async function handler(req, res) {
   var apiResponse = [];
 
   try {
-    console.log("fetching images from mongo.");
     apiResponse = await getImagesFromMongo(albumId);
-    res.status(200).send(apiResponse);
+    res.status(200).json(apiResponse);
   } catch (err) {
     console.log(err);
     res.status(401).json({ message: "Unauthorized", error: err });
