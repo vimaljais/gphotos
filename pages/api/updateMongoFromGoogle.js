@@ -12,13 +12,9 @@ export default async function handler(req, res) {
   var apiResponse = [];
   const tokens = await getToken();
 
-
   const googleCallAPI = async (pageToken) => {
     const requestOptions = await createHeader(tokens, pageToken, albumId);
-    let response = await fetch(
-      "https://photoslibrary.googleapis.com/v1/mediaItems:search",
-      requestOptions
-    );
+    let response = await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:search", requestOptions);
     response = await response.json();
 
     apiResponse = apiResponse.concat(response?.mediaItems);
@@ -31,11 +27,14 @@ export default async function handler(req, res) {
 
   try {
     await googleCallAPI();
-    await uploadToMongo(apiResponse,albumId);
-    return res.status(200).json({status: 'success'});
+    const chunkSize = 50;
+    for (let i = 0; i < apiResponse.length; i += chunkSize) {
+      const chunk = apiResponse.slice(i, i + chunkSize);
+      await uploadToMongo(chunk, albumId);
+    }
+    return res.status(200).json({ status: "success" });
   } catch (err) {
     console.log(err);
+    return res.status(400).json({ status: "error" });
   }
-
-  return res.status(200).json("blogData");
 }

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export default async function getImagesFromMongo(albumId) {
   var db;
 
-  let albums;
+  let albums = [];
 
   if (!db) {
     try {
@@ -13,13 +13,15 @@ export default async function getImagesFromMongo(albumId) {
 
       db = mongoose.connection;
       db.on("error", console.error.bind(console, "MongoDB connection error:"));
-
-      albums = await db.collection(albumId).find().toArray();
-
+      try {
+        albums = await db.collection(albumId).find().toArray();
+      } catch (err) {
+        return albums;
+      }
       return albums;
     } catch (error) {
       console.log(error);
-      res.status(401).json({ message: "Unauthorized" });
+      return "cant access db";
     }
   }
 }
