@@ -15,6 +15,7 @@ export default async function getImagesFromMongo(albumId) {
       db.on("error", console.error.bind(console, "MongoDB connection error:"));
       try {
         console.log("fetching from mongodb of albumID ", albumId)
+        console.log(db)
         albums = await db.collection(albumId).find().toArray();
         console.log(albums.length)
       } catch (err) {
