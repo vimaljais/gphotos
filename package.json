@@ -11,6 +11,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.10.13",
+    "form-data": "^4.0.0",
     "googleapis": "109.0.1",
     "mongoose": "^6.7.2",
     "next": "^13.0.0",
