@@ -8,11 +8,17 @@ export default async function handler(req, res) {
     albumId = process.env.TEST_ALBUM_ID; //test
   }
 
-  MongoClient.connect(process.env.MONGO_URL, async (err, db) => {
-    if (err) throw err;
-    var dbo = db.db("gphotos");
-    const result = await dbo.collection(albumId).find().toArray();
-    res.json(result);
+  const client = await MongoClient.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+  }).catch((err) => {
+    console.log(err);
   });
-}
 
+  if (!client) {
+    return;
+  }
+  const dbo = client.db("gphotos");
+
+  const result = await dbo.collection(albumId).find().toArray();
+  res.json(result);
+}
