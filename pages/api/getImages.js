@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     if (err) throw err;
     var dbo = db.db("gphotos");
     const result = await dbo.collection(albumId).find().toArray();
-    console.log(result);
     res.json(result);
   });
 }
