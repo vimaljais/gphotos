@@ -5,11 +5,10 @@ export default async function uploadToMongo(albumData, albumId) {
   console.log("starting to upload to mongo", albumData.length);
   try {
     var db;
-    let toPushData = [];
 
     if (!db) {
       try {
-        const mongoDB = process.env.MONGO_URL;
+        const mongoDB = process.env.MONGOOSE_URL;
         mongoose.connect(mongoDB, {
           useNewUrlParser: true,
           useUnifiedTopology: true

@@ -7,7 +7,7 @@ export default async function getImagesFromMongo(albumId) {
 
   if (!db) {
     try {
-      const mongoDB = process.env.MONGO_URL;
+      const mongoDB = process.env.MONGOOSE_URL;
 
       mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
