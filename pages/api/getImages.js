@@ -1,7 +1,6 @@
-import getImagesFromMongo from "../../util/getImagesFromMongo";
+let MongoClient = require("mongodb").MongoClient;
 
 export default async function handler(req, res) {
-
   let albumId;
   if (process.env.IS_PROD === "YES") {
     albumId = process.env.BONKY_ALBUM_ID; //BONKY
@@ -9,13 +8,12 @@ export default async function handler(req, res) {
     albumId = process.env.TEST_ALBUM_ID; //test
   }
 
-  var apiResponse = [];
-
-  try {
-    apiResponse = await getImagesFromMongo(albumId);
-    res.status(200).json(apiResponse);
-  } catch (err) {
-    console.log(err);
-    res.status(401).json({ message: "Unauthorized", error: err });
-  }
+  MongoClient.connect(process.env.MONGO_URL, async (err, db) => {
+    if (err) throw err;
+    var dbo = db.db("gphotos");
+    const result = await dbo.collection(albumId).find().toArray();
+    console.log(result);
+    res.json(result);
+  });
 }
+
